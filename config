@@ -3,10 +3,6 @@
 # this file and re-run i3-config-wizard(1).
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-# temporarily kill the ipc listener and tiled layout alternator
-$kill /usr/bin/i3-listener
-$kill /usr/bin/i3-alternating_layouts
-
 set $mod Mod4
 set $Ctrl bindsym Control
 set $prt bindsym Print
@@ -17,6 +13,9 @@ set $exea exec-always --no-startup-id exec
 set $kill exec pkill
 set $fyra exec --no-startup-id exec i3fyra
 set $viswiz exec --no-startup-id exec i3viswiz
+
+# temporarily kill the ipc listener and tiled layout alternator
+$kill /usr/bin/i3-listener
 
 # define the GUI file browser
 set $gui_file_browser caja
@@ -29,7 +28,7 @@ set $btclient transmission-gtk
 # define audio player
 set $audioplayer vlc
 # define internet radio player
-set $radioplayer x-terminal-emulator -e vlc-playlist
+set $radioplayer vlc-playlist gui
 # define video player
 set $videoplayer vlc
 # terminal
@@ -123,11 +122,11 @@ set	$bg2		#1C4052
 set	$shade		#909090
 set $medgrey	#333333
 set	$dkgrey		#181818
-set	$light		#ffcfaf
+set	$light		#217CD0
 set	$urgent		#900000
 
 # set window colors		border	backgr.	text	indicator   child_border
-client.focused          $bg2    $bg2    $fg		$bg2	    $bg2
+client.focused          $bg2    $bg2    $fg		$bg2	    $light
 client.focused_inactive $bg1    $bg1    $shade	$bg1	    $bg1
 client.unfocused        $bg1	$bg1    $shade	$bg1	    $bg1
 client.urgent           $urgent $urgent $fg		$bg1	    $urgent
@@ -146,14 +145,20 @@ floating_modifier $mod
 # focus shall not follow mouse
 focus_follows_mouse no
 
+# minimal window borders
+for_window [class="^.*"] border pixel 1
+
+# promote a window from stack to master (if "2 column layout)
+$super+p $exe i3-promote-window
+
 # set the mode for new containers (default | stacking | tabbed)
-workspace_layout tabbed
+workspace_layout default
 
 # change container layout (stacked, tabbed, toggle split)
 $super+e layout default
 $super+s layout stacking
 $super+w layout tabbed
-$super+g layout toggle default splith splitv tabbed
+$super+g layout toggle default splith splitv stacked tabbed
 
 # toggle tiling / floating (conventional i3)
 $super+Shift+space floating toggle
@@ -223,6 +228,7 @@ $super+z mode "resize"
 # Start i3bar to display a $bar (plus the system information i3status
 # finds out, if available)
 bar {
+    font pango: Arimo Nerd Font regular 11
 	mode dock
 	position top
 	strip_workspace_numbers no
@@ -248,7 +254,7 @@ bar {
 $super+Tab         $exe i3flip -m
 $super+Shift+Tab   $exe i3flip -p
 
-# move focused windows among containers using hjkl jeys:
+# move focused windows among containers using hjkl keys:
 $super+Shift+h $fyra -m l
 $super+Shift+j $fyra -m d
 $super+Shift+k $fyra -m u
@@ -266,26 +272,12 @@ $super+j $viswiz d
 $super+k $viswiz u
 $super+l $viswiz r
 
-# MATE panel, settings, power manager, nm-applet
-#$exe mate-panel
-$exe mate-settings-daemon
-$exe mate-power-manager
-$exe nm-applet
-#$exe mate-session
-$exe xdg-user-dirs-update
-
-# udiskie
-$exe udiskie --no-notify
-
 # background wallpaper
-$exe feh --bg-scale /usr/share/backgrounds/wallpaper.png
+$exe feh --no-fehbg --bg-scale /usr/share/backgrounds/wallpaper.png
 
-# use "i3 alternating layouts" script
-#$exe /usr/bin/i3-alternating_layouts
+# use "i3-tabbed" to enable window swallowing
+$exe i3-tabbed
 
 # use a listener script to invoke tools using i3-ipc; include
 # arguments for percentage scaling of floating window WIDTH and HEIGHT
 $exe /usr/bin/i3-listener 75 85
-
-# use compton compositor
-$exe /usr/bin/compton --config ~/.config/compton/compton.conf
