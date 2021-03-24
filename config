@@ -14,15 +14,12 @@ set $kill exec pkill
 set $fyra exec --no-startup-id exec i3fyra
 set $viswiz exec --no-startup-id exec i3viswiz
 
-# temporarily kill the ipc listener and tiled layout alternator
-$kill /usr/bin/i3-listener
-
 # define the GUI file browser
 set $gui_file_browser caja
 # define the CLI file browser
 set $cli_file_browser x-terminal-emulator -e lf
 # define the web browser
-set $internet_browser firefox
+set $internet_browser x-www-browser
 # define bit torrent client
 set $btclient transmission-gtk
 # define audio player
@@ -272,12 +269,4 @@ $super+j $viswiz d
 $super+k $viswiz u
 $super+l $viswiz r
 
-# background wallpaper
-$exe feh --no-fehbg --bg-scale /usr/share/backgrounds/wallpaper.png
-
-# use "i3-tabbed" to enable window swallowing
-$exe i3-tabbed
-
-# use a listener script to invoke tools using i3-ipc; include
-# arguments for percentage scaling of floating window WIDTH and HEIGHT
-$exe /usr/bin/i3-listener 75 85
+$exe source ~/.xinitrc
