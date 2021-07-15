@@ -98,7 +98,7 @@ $ctrlalt+Delete mode "$mode_system"
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango: Arimo Nerd Font Bold 11
+font pango: Arimo Nerd Font Bold 10
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -112,22 +112,22 @@ font pango: Arimo Nerd Font Bold 11
 # font, it doesn’t scale on retina/hidpi displays.
 
 # set colors
-set	$fg			#f9f9f9
+set	$fg1		#A0A0A0
+set	$fg2		#f9f9f9
 set $bg0		#000000
-set	$bg1		#152030
-set	$bg2		#1C4052
-set	$shade		#909090
-set $medgrey	#333333
-set	$dkgrey		#181818
+set	$bg1		#151515
+set	$bg2		#404040
+set	$dark		#151515
+set $medium     #252525
 set	$light		#217CD0
 set	$urgent		#900000
 
 # set window colors		border	backgr.	text	indicator   child_border
-client.focused          $bg2    $bg2    $fg		$bg2	    $light
-client.focused_inactive $bg1    $bg1    $shade	$bg1	    $bg1
-client.unfocused        $bg1	$bg1    $shade	$bg1	    $bg1
-client.urgent           $urgent $urgent $fg		$bg1	    $urgent
-client.placeholder		$bg1	$bg1	$shade	$bg1	    $bg1
+client.focused          $bg2    $bg2    $fg2	$bg2	    $light
+client.focused_inactive $bg1    $bg1    $fg1	$bg1	    $bg1
+client.unfocused        $bg1	$bg1    $fg1	$bg1	    $bg1
+client.urgent           $urgent $urgent $fg2	$bg1	    $urgent
+client.placeholder		$bg1	$bg1	$fg1	$bg1	    $bg1
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -225,24 +225,24 @@ $super+z mode "resize"
 # Start i3bar to display a $bar (plus the system information i3status
 # finds out, if available)
 bar {
-    font pango: Arimo Nerd Font regular 11
+    font pango: Arimo Nerd Font regular 10
 	mode dock
 	position top
 	strip_workspace_numbers no
 	tray_output primary
-	tray_padding 3
+	tray_padding 4
 	status_command py3status
 	bindsym button3 $exe run-rofi
 	colors {
         background 		$bg0
-        statusline 		$fg
-        separator		$shade
-
-        focused_workspace	$bg2		$bg2		$fg
-        active_workspace	$bg1		$bg1		$fg
-        inactive_workspace	$medgrey	$medgrey	$shade
-        urgent_workspace	$urgent		$urgent		$fg
-        binding_mode		$bg1		$urgent		$fg	}
+        statusline 		$fg2
+        separator		$fg1
+#                           border      backgr.     text
+        focused_workspace	$bg2		$bg2		$fg2
+        active_workspace	$bg1		$bg1		$fg2
+        inactive_workspace	$medium	    $medium	    $fg1
+        urgent_workspace	$urgent		$urgent		$fg2
+        binding_mode		$bg1		$urgent		$fg2	}
 }
 
 
@@ -268,5 +268,3 @@ $super+h $viswiz l
 $super+j $viswiz d
 $super+k $viswiz u
 $super+l $viswiz r
-
-$exe source ~/.xinitrc
