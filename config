@@ -3,6 +3,7 @@
 # this file and re-run i3-config-wizard(1).
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
+set $font Arimo Nerd Font 10
 set $mod Mod4
 set $Ctrl bindsym Control
 set $prt bindsym Print
@@ -20,12 +21,18 @@ set $gui_file_browser caja
 set $cli_file_browser x-terminal-emulator -e lf
 # define the web browser
 set $internet_browser x-www-browser
+# define the CLI web browser
+set $cli_internet_browser x-terminal-emulator -e w3m "https://dnsleaktest.com"
 # define bit torrent client
 set $btclient transmission-gtk
 # define audio player
 set $audioplayer vlc
 # define internet radio player
 set $radioplayer vlc-playlist gui
+# define SDR player (gui)
+set $sdrplayer sdr-stream gui
+# define SDR client
+set $sdrclient sdrpp
 # define video player
 set $videoplayer vlc
 # terminal
@@ -33,14 +40,16 @@ set $terminal x-terminal-emulator -e tmux -2
 # define the volume controls
 set $volume x-terminal-emulator -e alsamixer
 set $volume2 pavucontrol
+# screenshot utility
+set $screenshooter mate-screenshot
 
 #==============================================================================
 #  AVOID TAMPERING WITH THE LINES BELOW HERE
 #==============================================================================
 
 # start other applications
-$prt $exe mate-screenshot
-$super+Print $exe mate-screenshot
+$prt $exe $screenshooter
+$super+Print $exe $screenshooter
 $super+Return $exe $terminal
 $ctrlalt+t $exe $terminal
 $super+v $exe $volume
@@ -50,9 +59,14 @@ $super+Shift+d $exe $radioplayer
 $super+f $exe $gui_file_browser
 $super+Shift+f $exe $cli_file_browser
 $super+i $exe $internet_browser
+$super+Shift+i $exe $cli_internet_browser
 $super+m $exe $videoplayer
 $super+q $exe $btclient
 $super+r $exe run-rofi
+$super+s $exe $sdrplayer
+$super+Shift+s $exe $sdrclient
+$super+c $exe roficalc
+$super+t $exe twitgrid gui
 
 # cursor keys
 set $diru Up
@@ -82,23 +96,27 @@ $super+Shift+c reload
 $super+Shift+r restart
 
 # exit i3 (logs you out of your X session)
-set $mode_system System (l) logout, (r) reboot, (s) shutdown
-mode "$mode_system" {
-    bindsym l $exe i3-msg exit
-	bindsym r $exe systemctl reboot
-    bindsym s $exe systemctl poweroff
+#set $mode_system System (l) logout, (r) reboot, (s) shutdown
+#mode "$mode_system" {
+    #bindsym l $exe i3-msg exit
+	#bindsym r $exe systemctl reboot
+    #bindsym s $exe systemctl poweroff
 
-    # back to normal: Enter or Escape
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-$super+Pause mode "$mode_system"
-$super+Shift+e mode "$mode_system"
-$ctrlalt+Delete mode "$mode_system"
+    ## back to normal: Enter or Escape
+    #bindsym Return mode "default"
+    #bindsym Escape mode "default"
+#}
+#$super+Pause mode "$mode_system"
+#$super+Shift+e mode "$mode_system"
+#$ctrlalt+Delete mode "$mode_system"
+
+$super+Pause $exe system-exit
+$super+Shift+e $exe system-exit
+$ctrlalt+Delete $exe system-exit
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango: Arimo Nerd Font Bold 10
+font pango: $font
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -153,7 +171,7 @@ workspace_layout default
 
 # change container layout (stacked, tabbed, toggle split)
 $super+e layout default
-$super+s layout stacking
+#$super+s layout stacking
 $super+w layout tabbed
 $super+g layout toggle default splith splitv stacked tabbed
 
@@ -196,6 +214,9 @@ $super+Shift+0 move container to workspace $ws10
 $super+Shift+F1 move container to scratchpad
 $super+F1 scratchpad show
 
+# Toggle window fullscreen
+$super+F11 fullscreen toggle
+
 #resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
@@ -225,7 +246,7 @@ $super+z mode "resize"
 # Start i3bar to display a $bar (plus the system information i3status
 # finds out, if available)
 bar {
-    font pango: Arimo Nerd Font regular 10
+    font pango: $font
 	mode dock
 	position top
 	strip_workspace_numbers no
