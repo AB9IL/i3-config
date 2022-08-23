@@ -14,6 +14,7 @@ set $exea exec-always --no-startup-id exec
 set $kill exec pkill
 set $fyra exec --no-startup-id exec i3fyra
 set $viswiz exec --no-startup-id exec i3viswiz
+set $zen exec --no-startup-id exec i3zen
 
 # define the GUI file browser
 set $gui_file_browser caja
@@ -181,6 +182,9 @@ bindsym $mod+button3 floating toggle
 
 # change focus between tiling / floating windows
 $super+space focus mode_toggle
+
+# Toggle i3zen (floating and tiled on clean workspace)
+$super+Control+space $zen
 
 # focus the parent container
 #$super+a focus parent
