@@ -1,23 +1,28 @@
-# i3 CONFIGURATION
+# i3 config file (v4)
 # Should you change your keyboard layout some time, delete
 # this file and re-run i3-config-wizard(1).
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $font Arimo Nerd Font 10
+# screen dimensions
+set $WIDTH 75
+set $HEIGHT 85
+
 set $mod Mod4
 set $Ctrl bindsym Control
 set $prt bindsym Print
 set $super bindsym Mod4
 set $ctrlalt bindsym Control+Mod1
 set $exe exec --no-startup-id exec
-set $exea exec-always --no-startup-id exec
+set $exea exec_always --no-startup-id exec
 set $kill exec pkill
 set $fyra exec --no-startup-id exec i3fyra
 set $viswiz exec --no-startup-id exec i3viswiz
 set $zen exec --no-startup-id exec i3zen
+set $run exec --no-startup-id i3run --
 
 # define the GUI file browser
-set $gui_file_browser caja
+set $gui_file_browser i3-scratchpad-show-or-create.sh 'Scratch-File-Manager' 'caja'
 # define the CLI file browser
 set $cli_file_browser x-terminal-emulator -e lf
 # define the web browser
@@ -25,7 +30,7 @@ set $internet_browser x-www-browser
 # define the CLI web browser
 set $cli_internet_browser x-terminal-emulator -e w3m "https://dnsleaktest.com"
 # define bit torrent client
-set $btclient transmission-gtk
+set $btclient tixati
 # define audio player
 set $audioplayer vlc
 # define internet radio player
@@ -37,12 +42,16 @@ set $sdrclient sdrpp
 # define video player
 set $videoplayer vlc
 # terminal
-set $terminal x-terminal-emulator -e tmux -2
+set $terminal i3-scratchpad-show-or-create.sh 'Scratch-Terminal' 'x-terminal-emulator -e tmux -2'
 # define the volume controls
 set $volume x-terminal-emulator -e alsamixer
 set $volume2 pavucontrol
 # screenshot utility
 set $screenshooter mate-screenshot
+# define the note taking app
+set $notes obsidian
+# define the CLI note taking app
+set $cli_notes x-terminal-emulator -e note-sorter
 
 #==============================================================================
 #  AVOID TAMPERING WITH THE LINES BELOW HERE
@@ -56,7 +65,6 @@ $ctrlalt+t $exe $terminal
 $super+v $exe $volume
 $super+Shift+v $exe $volume2
 $super+d $exe $audioplayer
-$super+Shift+d $exe $radioplayer
 $super+f $exe $gui_file_browser
 $super+Shift+f $exe $cli_file_browser
 $super+i $exe $internet_browser
@@ -64,10 +72,16 @@ $super+Shift+i $exe $cli_internet_browser
 $super+m $exe $videoplayer
 $super+q $exe $btclient
 $super+r $exe run-rofi
-$super+s $exe $sdrplayer
-$super+Shift+s $exe $sdrclient
+$super+Shift+Return $exe run-rofi
+$super+s $exe $radioplayer
+$super+Shift+s $exe $sdrplayer
+$super+ctrl+s $exe $sdrclient
 $super+c $exe roficalc
-$super+t $exe twitgrid gui
+$super+t $exe bluetabs gui
+$super+n $exe networkmanager_dmenu
+$super+b $exe blueman-manager
+$super+o $exe $notes
+$super+Shift+o $exe $cli_notes
 
 # cursor keys
 set $diru Up
@@ -158,11 +172,15 @@ floating_modifier $mod
 # installed.
 # $super+d exec --no-startup-id i3-dmenu-desktop
 
+#gaps and borders
+gaps inner 7
+gaps outer 5
+for_window [class="^.*"] border pixel 1
+smart_gaps on
+smart_borders on
+
 # focus shall not follow mouse
 focus_follows_mouse no
-
-# minimal window borders
-for_window [class="^.*"] border pixel 1
 
 # promote a window from stack to master (if "2 column layout)
 $super+p $exe i3-promote-window
@@ -170,21 +188,31 @@ $super+p $exe i3-promote-window
 # set the mode for new containers (default | stacking | tabbed)
 workspace_layout default
 
-# change container layout (stacked, tabbed, toggle split)
-$super+e layout default
-#$super+s layout stacking
+# Change the container layout
 $super+w layout tabbed
 $super+g layout toggle default splith splitv stacked tabbed
 
 # toggle tiling / floating (conventional i3)
-$super+Shift+space floating toggle
-bindsym $mod+button3 floating toggle
+$super+Shift+space floating toggle, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+bindsym $mod+button3 floating toggle, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
 
 # change focus between tiling / floating windows
 $super+space focus mode_toggle
 
 # Toggle i3zen (floating and tiled on clean workspace)
 $super+Control+space $zen
+
+# Float certain applications by class
+for_window [ class="caja" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="Caja" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="thunar" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="Thunar" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="Terminal" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="terminal" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="Wezterm" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="wezterm" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="engrampa" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
+for_window [ class="Engrampa" ] floating enable, resize set $WIDTH ppt $HEIGHT ppt, move absolute position center
 
 # focus the parent container
 #$super+a focus parent
@@ -293,3 +321,21 @@ $super+h $viswiz l
 $super+j $viswiz d
 $super+k $viswiz u
 $super+l $viswiz r
+
+# Brightness
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+
+# Audio gain or mute
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+$exe i3-listener $WIDTH $HEIGHT &
